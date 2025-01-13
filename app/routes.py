@@ -9,7 +9,6 @@ def home():
 
 
 
-
 @app.route("/add_data", methods=["POST"])
 def add_data():
     data = generate_random_user()
@@ -19,12 +18,10 @@ def add_data():
     return jsonify({"message": "User added successfully!"})
 
 
-
 @app.route("/latest_data", methods=["GET"])
 def get_latest_data():
     try:
         # last_document = mongo.db.users.find().sort([("_id", -1)]).limit(1)
-
         latest_document = mongo.db.users.find().sort([("created_at", -1)]).limit(1)
         latest_data = list(latest_document)
         
@@ -38,3 +35,15 @@ def get_latest_data():
 
 
 
+
+@app.route("/history", methods=["GET"])
+def history():
+    try:
+        documents = mongo.db.users.find().sort([("created_at", -1)]).limit(10)
+        history_data = []
+        for doc in documents:
+            doc["_id"] = str(doc["_id"])
+            history_data.append(doc)
+        return jsonify({"history": history_data})
+    except Exception as e:
+        return jsonify({"error": f"Failed to retrieve history: {str(e)}"}), 500
