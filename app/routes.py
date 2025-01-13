@@ -41,10 +41,12 @@ def add_data(username):
             {"$push": {"health_data": health_data}}
         )
         
-        return jsonify({"message": f"Data added successfully for user '{username}'."}), 200
+        return jsonify({"message": f"Health_Data is added successfully for user '{username}'",
+        "Health Data": health_data}), 200
 
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 
 
