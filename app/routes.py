@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from app import app, mongo
 from app.utils import generate_random_user
+from datetime import datetime
 
 @app.route("/")
 def home():
@@ -14,20 +15,22 @@ def add_data():
     data = generate_random_user()
     username = data.get("username")
     email = data.get("email")
-    mongo.db.users.insert_one({"username": username, "email": email})
+    mongo.db.users.insert_one({"username": username, "email": email, "created_at": datetime.utcnow()})
     return jsonify({"message": "User added successfully!"})
 
 
 
-@app.route("/last_data", methods=["GET"])
-def get_last_data():
+@app.route("/latest_data", methods=["GET"])
+def get_latest_data():
     try:
-        last_document = mongo.db.users.find().sort([("_id", -1)]).limit(1)
-        last_data = list(last_document)
+        # last_document = mongo.db.users.find().sort([("_id", -1)]).limit(1)
+
+        latest_document = mongo.db.users.find().sort([("created_at", -1)]).limit(1)
+        latest_data = list(latest_document)
         
-        if last_data:
-            last_data[0]["_id"] = str(last_data[0]["_id"])
-            return jsonify(last_data[0])
+        if latest_data:
+            latest_data[0]["_id"] = str(latest_data[0]["_id"])
+            return jsonify(latest_data[0])
         else:
             return jsonify({"message": "No data found in the collection."})
     except Exception as e:
