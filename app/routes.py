@@ -20,7 +20,9 @@ def add_user():
         # email = data.get("email")
         # health_data = data.get("health_data");
         # mongo.db.users.insert_one({"username": username, "email": email, "health_data": health_data, "created_at": datetime.utcnow()})
-        mongo.db.users.insert_one(data)
+        # print("This is mongo", mongo.cx['remote']) # This is MongoDB Atlas
+        mongo.cx['remote'].users.insert_one(data)  # This is for mongoDB atlas
+         # mongo.db.users.insert_one(data) # This is for compass
         return jsonify({"message": "User added successfully!"})
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
@@ -32,13 +34,19 @@ def add_user():
 def add_data(username):
     try:
         health_data = genrate_random_health_data()
-        user = mongo.db.users.find_one({"username":username})
+        # user = mongo.db.users.find_one({"username":username}) # for compass
+        user = mongo.cx['remote'].users.find_one({"username":username}) 
         if not user:
             return jsonify({"error": f"User with username '{username}' not found."}), 404
 
-        mongo.db.users.update_one(
+        # mongo.db.users.update_one(
+        #     {"username": username},
+        #     {"$push": {"health_data": health_data}}          # This is for compass
+        # )
+
+        mongo.cx['remote'].users.update_one(
             {"username": username},
-            {"$push": {"health_data": health_data}}
+            {"$push": {"health_data" : health_data}}   # This is for mongodb atlas
         )
         
         return jsonify({"message": f"Health_Data is added successfully for user '{username}'",
@@ -58,7 +66,9 @@ def add_data(username):
 @app.route("/history/<username>", methods=["GET"])
 def history(username):
     try:
-        user = mongo.db.users.find_one({"username": username})
+        # user = mongo.db.users.find_one({"username": username})  # for compass
+
+        user = mongo.cx['remote'].users.find_one({"username": username})
 
         if not user:
             return jsonify({"error": f"User not found: {str(e)}"}), 404
