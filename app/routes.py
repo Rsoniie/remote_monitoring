@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify
 from app import app, mongo
 from app.utils import generate_random_user, genrate_random_health_data
 from datetime import datetime
-import random
+# import random
 
 
 @app.route("/")
@@ -24,6 +24,7 @@ def add_user():
         return jsonify({"message": "User added successfully!"})
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 
 
@@ -50,32 +51,18 @@ def add_data(username):
 
 
 
-@app.route("/latest_data", methods=["GET"])
-def get_latest_data():
+
+
+@app.route("/history/<username>", methods=["GET"])
+def history(username):
     try:
-        # last_document = mongo.db.users.find().sort([("_id", -1)]).limit(1)
-        latest_document = mongo.db.users.find().sort([("created_at", -1)]).limit(1)
-        latest_data = list(latest_document)
-        
-        if latest_data:
-            latest_data[0]["_id"] = str(latest_data[0]["_id"])
-            return jsonify(latest_data[0])
-        else:
-            return jsonify({"message": "No data found in the collection."})
-    except Exception as e:
-        return jsonify({"error": f"Failed to retrieve data: {str(e)}"}), 500
+        user = mongo.db.users.find_one({"username": username})
 
-
-
-
-@app.route("/history", methods=["GET"])
-def history():
-    try:
-        documents = mongo.db.users.find().sort([("created_at", -1)]).limit(10)
+        if not user:
+            return jsonify({"error": f"User not found: {str(e)}"}), 404
         history_data = []
-        for doc in documents:
-            doc["_id"] = str(doc["_id"])
-            history_data.append(doc)
+
+        history_data = user["health_data"]
         return jsonify({"history": history_data})
     except Exception as e:
         return jsonify({"error": f"Failed to retrieve history: {str(e)}"}), 500
