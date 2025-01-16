@@ -15,15 +15,29 @@ def home():
 def add_user():
 
     try:
-        data = generate_random_user()
-        # username = data.get("username")
-        # email = data.get("email")
-        # health_data = data.get("health_data");
-        # mongo.db.users.insert_one({"username": username, "email": email, "health_data": health_data, "created_at": datetime.utcnow()})
-        # print("This is mongo", mongo.cx['remote']) # This is MongoDB Atlas
-        mongo.cx['remote'].users.insert_one(data)  # This is for mongoDB atlas
-         # mongo.db.users.insert_one(data) # This is for compass
+        if not request.is_json:
+            return jsonify({"error": "Content-Type must be 'application/json'"}), 415
+        # data = generate_random_user()
+        data = request.get_json(silent=True)
+        username = data.get("username")
+        password = data.get("password")
+        email = data.get("email")
+
+
+        if not username or not password:
+            return jsonify({"error": "Username and password are required!"}), 400
+        
+        user_data = {
+            "username": username,
+            "email": email,
+            "password": password,
+            "health_data": [],
+            "created_at": datetime.utcnow()
+        }
+        mongo.cx['remote'].users.insert_one(user_data) 
         return jsonify({"message": "User added successfully!"})
+    
+
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
@@ -57,9 +71,23 @@ def add_data(username):
 
 
 
+@app.route("/add_to_all", methods=["POST"])
+def add_to_all():
+    try:
+        users = mongo.cx['remote'].users.find({})
+        users_list = []
+        for user in users:
 
+            health_data = genrate_random_health_data()
 
-
+            mongo.cx['remote'].users.update_one(
+                {"_id": user["_id"]},
+                {"$push": {"health_data": health_data}}
+            )
+        return jsonify({"message": f"All user updated successfully."}), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 
