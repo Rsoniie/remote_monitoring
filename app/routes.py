@@ -21,7 +21,7 @@ def add_user():
         data = request.get_json(silent=True)
         username = data.get("username")
         password = data.get("password")
-        email = data.get("email")
+        parent_email = data.get("email")
 
 
         if not username or not password:
@@ -29,7 +29,7 @@ def add_user():
         
         user_data = {
             "username": username,
-            "email": email,
+            "email": parent_email,
             "password": password,
             "health_data": [],
             "created_at": datetime.utcnow()
@@ -41,33 +41,6 @@ def add_user():
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
-
-
-
-@app.route("/add_data/<username>", methods=["POST"])
-def add_data(username):
-    try:
-        health_data = genrate_random_health_data()
-        # user = mongo.db.users.find_one({"username":username}) # for compass
-        user = mongo.cx['remote'].users.find_one({"username":username}) 
-        if not user:
-            return jsonify({"error": f"User with username '{username}' not found."}), 404
-
-        # mongo.db.users.update_one(
-        #     {"username": username},
-        #     {"$push": {"health_data": health_data}}          # This is for compass
-        # )
-
-        mongo.cx['remote'].users.update_one(
-            {"username": username},
-            {"$push": {"health_data" : health_data}}   # This is for mongodb atlas
-        )
-        
-        return jsonify({"message": f"Health_Data is added successfully for user '{username}'",
-        "Health Data": health_data}), 200
-
-    except Exception as e:
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 
@@ -84,7 +57,12 @@ def add_to_all():
                 {"_id": user["_id"]},
                 {"$push": {"health_data": health_data}}
             )
-        return jsonify({"message": f"All user updated successfully."}), 200
+
+            user["_id"] = str(user["_id"])
+
+
+            users_list.append(user)
+        return jsonify({"message": f"All user updated successfully.", "users_list": users_list}), 200
     
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
