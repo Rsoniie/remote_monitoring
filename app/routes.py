@@ -55,7 +55,7 @@ def add_to_all():
 
             mongo.cx['remote'].users.update_one(
                 {"_id": user["_id"]},
-                {"$push": {"health_data": health_data}}
+                {"$push": {"health_data": { "$each" : [health_data] , "$slice": -10}}}
             )
 
             user["_id"] = str(user["_id"])
@@ -88,7 +88,6 @@ def history(username):
 
 
 
-
 @app.route("/login", methods=["POST"])
 def login():
         
@@ -118,6 +117,20 @@ def login():
             return jsonify({"error": f"Failed to retrieve history: {str(e)}"}), 500
 
         
+
+@app.route("/show/<username>", methods = ["GET"])
+def show(username):
+    try:
+
+        user = mongo.cx['remote'].users.find_one({"username": username})
+        current_data = user["health_data"][-1]
+        return jsonify({"current_data": current_data})
+
+
+
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to retrieve recent_data : {str(e)}"}), 500
 
 
 

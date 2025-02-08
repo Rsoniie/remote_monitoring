@@ -4,7 +4,7 @@ from app import mongo
 class User:
     @staticmethod
     def create_user(data):
-        required_fields = ['username', 'email']
+        required_fields = ['username', 'email', 'password']
         
         for field in required_fields:
             if field not in data or not data[field]:
