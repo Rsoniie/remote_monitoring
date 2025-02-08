@@ -3,12 +3,18 @@ const form = document.querySelector("#form");
 const user = document.querySelector("#user");
 const pass = document.querySelector("#pass");
 const submit = document.querySelector("#submit");
+const show = document.querySelector("#show");
+const data = document.querySelector("#current");
+data.style.display = "none";
 form.style.display = "none";
 
 login.addEventListener("click", (event) => {
   event.preventDefault();
   form.style.display = "block";
 });
+
+
+
 submit.addEventListener("click", async (event) => {
   event.preventDefault();
 
@@ -39,3 +45,19 @@ submit.addEventListener("click", async (event) => {
     alert(error.message);
   }
 });
+
+
+show.addEventListener("click", (event) => {
+    event.preventDefault();
+    if(data.style.display == 'none')
+    {
+        show.innerHTML = "hide";
+        data.style.display = 'block';
+    }
+    else 
+    {
+        show.innerHTML = "show";
+        data.style.display = 'none';
+    }
+})
+
