@@ -1,4 +1,4 @@
-#!/home/roshan/Documents/Remote_Monitoring/myenv/bin/python3
+#!/home/roshan/Documents/remote_monitoring/myenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
