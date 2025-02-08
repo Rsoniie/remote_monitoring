@@ -18,3 +18,4 @@ class User:
         
         user_id = mongo.db.users.insert_one(data).inserted_id
         return {"message": "User created successfully!", "user_id": str(user_id)}
+  # 
