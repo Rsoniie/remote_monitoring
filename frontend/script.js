@@ -1,22 +1,17 @@
 document.getElementById('addUserButton').addEventListener('click', async () => {
-    // await apiCall('http://localhost:5000/add_user', 'POST', 'Add User', null);
-    await apiCall('http://127.0.0.1:5000/add_user', 'POST', 'Add User', null);
+    await apiCall('https://remote-monitoring.onrender.com/add_user', 'POST', 'Add User', null);
 });
 
 document.getElementById('addDataButton').addEventListener('click', async () => {
-    const username = document.getElementById('username').value;
-    if(username) {
+    
         // await apiCall(`http://localhost:5000/add_data/${username}`, 'POST', 'Add Data', username);
-        await apiCall(`http://127.0.0.1:5000/add_data/${username}`, 'POST', 'Add Data', username);
-    } else {
-        displayResponse('Username is required for adding data.');
-    }
+        await apiCall(`https://remote-monitoring.onrender.com/add_to_all`, 'POST', 'Add Data');
 });
 
 document.getElementById('fetchHistoryButton').addEventListener('click', async () => {
     const username = document.getElementById('username').value;
     if(username) {
-        await apiCall(`http://127.0.0.1:5000/history/${username}`, 'GET', 'Fetch History', username);
+        await apiCall(`https://remote-monitoring.onrender.com/history/${username}`, 'GET', 'Fetch History', username);
     } else {
         displayResponse('Username is required to fetch history.');
     }

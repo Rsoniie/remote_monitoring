@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,5 +17,51 @@
     <div id="responseArea"></div>
 
     <script src="script.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic API Call</title>
+</head>
+<body>
+    <h1>API Response Viewer</h1>
+    <div id="response-container">Waiting for data...</div>
+
+    <script>
+        // The URL of the API you want to fetch data from
+        const apiURL = "https://remote-monitoring.onrender.com/add_to_all";
+
+        // Function to fetch data from the API with a POST request
+        async function fetchData() {
+            try {
+                const response = await fetch(apiURL, {
+                    method: "POST", // Use POST method
+                    headers: {
+                        "Content-Type": "application/json" // Inform the API about the content type
+                    },
+                    body: JSON.stringify({ key: "value" }) // Send a payload if required
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                document.getElementById('response-container').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response-container').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Use setInterval to call fetchData every 70 seconds
+        setInterval(fetchData, 70000); // 70000 ms = 70 seconds
+
+        // Optionally, fetch data immediately on page load
+        fetchData();
+    </script>
 </body>
 </html>
