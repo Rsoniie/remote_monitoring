@@ -5,6 +5,7 @@ const pass = document.querySelector("#pass");
 const submit = document.querySelector("#submit");
 const show = document.querySelector("#show");
 const data = document.querySelector("#current");
+const history = document.querySelector("#history");
 data.style.display = "none";
 form.style.display = "none";
 
@@ -80,6 +81,32 @@ show.addEventListener("click", async (event) => {
         data.style.display = 'none';
     }
 });
+
+history.addEventListener("click", async(event) => {
+  event.preventDefault();
+  try {
+    const username = localStorage.getItem('username');
+    // console.log(username);
+
+    const response = await fetch(`/history/${username}`, {
+      method: "GET",
+      headers:{
+        "Content-Type": "application/json"
+      }
+    })
+    const current_history = await response.json();
+    // console.log(current_history["history"]);
+    data.innerHTML = JSON.stringify(current_history);
+    data.style.display = 'block';
+
+  } catch (error) {
+    alert(error.message);
+  }
+})
+
+
+
+
 
 
 
