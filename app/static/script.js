@@ -15,8 +15,6 @@ const signup_password = document.querySelector("#signup_password");
 
 
 
-
-
 login.addEventListener("click", (event) => {
   event.preventDefault();
   form.style.display = "block";
@@ -57,8 +55,6 @@ show.addEventListener("click", async (event) => {
     event.preventDefault();
     if(data.style.display == 'none')
     {
-
-
       try{
         const username = localStorage.getItem('username');
         console.log(username);

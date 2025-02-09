@@ -2,7 +2,6 @@ from flask import render_template, request, jsonify
 from app import app, mongo
 from app.utils import generate_random_user, genrate_random_health_data
 from datetime import datetime
-# import random
 
 
 @app.route("/")
@@ -134,6 +133,7 @@ def show(username):
 
     except Exception as e:
         return jsonify({"error": f"Failed to retrieve recent_data : {str(e)}"}), 500
+
 
 
 
