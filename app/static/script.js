@@ -51,37 +51,51 @@ submit.addEventListener("click", async (event) => {
   }
 });
 
-show.addEventListener("click", async (event) => {
-    event.preventDefault();
-    if(data.style.display == 'none')
-    {
-      try{
-        const username = localStorage.getItem('username');
-        console.log(username);
-        const response = await fetch(`/show/${username}`, {
-          method : "GET",
-          headers : {
-            "Content-Type": "application/json"
-          }
-        })
+// show.addEventListener("click", async (event) => {
+//     event.preventDefault();
+//       try{
+//         const username = localStorage.getItem('username');
+//         console.log(username);
+//         const response = await fetch(`/show/${username}`, {
+//           method : "GET",
+//           headers : {
+//             "Content-Type": "application/json"
+//           }
+//         })
 
-        const current_data = await response.json();        
-        show.innerHTML = "hide";
-        data.innerHTML = JSON.stringify(current_data["current_data"])
-        data.style.display = 'block';
-      }
-      catch(error)
-      {
-        alert(error.message)
-      }
-    }
-    else 
-    {
-        show.innerHTML = "show";
-        data.innerHTML = "This is hiding state";
-        data.style.display = 'none';
-    }
-});
+//         const current_data = await response.json();        
+//         show.innerHTML = "hide";
+//         data.innerHTML = JSON.stringify(current_data["current_data"])
+//         data.style.display = 'block';
+//       }
+//       catch(error)
+//       {
+//         alert(error.message)
+//       }
+    
+// });
+
+
+setInterval(async () => {
+  try {
+      const username = localStorage.getItem('username');
+      console.log(username);
+      const response = await fetch(`/show/${username}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
+          }
+      });
+
+      const current_data = await response.json();
+      show.innerHTML = "hide";
+      data.innerHTML = JSON.stringify(current_data["current_data"]);
+      data.style.display = 'block';
+  } catch (error) {
+      alert(error.message);
+  }
+}, 30000); 
+
 
 history.addEventListener("click", async(event) => {
   event.preventDefault();
