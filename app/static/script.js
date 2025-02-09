@@ -6,15 +6,21 @@ const submit = document.querySelector("#submit");
 const show = document.querySelector("#show");
 const data = document.querySelector("#current");
 const history = document.querySelector("#history");
-data.style.display = "none";
-form.style.display = "none";
+const signup = document.querySelector("#signup");
+const signup_form = document.querySelector("#signup_form");
+const signup_submit = document.querySelector("#singup_submit");
+const signup_username = document.querySelector("#signup_username");
+const signup_email = document.querySelector("#signup_email");
+const signup_password = document.querySelector("#signup_password");
+
+
+
 
 
 login.addEventListener("click", (event) => {
   event.preventDefault();
   form.style.display = "block";
 });
-
 
 submit.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -46,7 +52,6 @@ submit.addEventListener("click", async (event) => {
     alert(error.message);
   }
 });
-
 
 show.addEventListener("click", async (event) => {
     event.preventDefault();
@@ -95,14 +100,50 @@ history.addEventListener("click", async(event) => {
       }
     })
     const current_history = await response.json();
-    // console.log(current_history["history"]);
     data.innerHTML = JSON.stringify(current_history);
     data.style.display = 'block';
 
   } catch (error) {
     alert(error.message);
   }
-})
+});
+
+signup.addEventListener("click", async (event) => {
+  event.preventDefault();
+  signup_form.style.display = 'block'
+});
+
+signup_submit.addEventListener("click", async (event) => {
+  event.preventDefault();
+  try
+  {
+    signup_form.style.display = 'none';
+    const username = signup_username.value;
+    const email = signup_email.value;
+    const password = signup_password.value;
+    const response = await fetch('/add_user', {
+      method: "POST",
+      headers :{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({username, email, password})
+    })
+    if(response.status == 200)
+    {
+      alert("User created sucessfully")
+    }
+    else{
+      alert("Username already exist")
+    }
+  }catch(error)
+  {
+    alert(error.message);
+  }
+});
+
+
+
+
 
 
 

@@ -34,6 +34,9 @@ def add_user():
             "health_data": [],
             "created_at": datetime.utcnow()
         }
+        chk = mongo.cx['remote'].users.find_one({"username": username})
+        if chk:
+            return jsonify({"message" : "Existing Username"}), 400
         mongo.cx['remote'].users.insert_one(user_data) 
         return jsonify({"message": "User added successfully!"})
     
@@ -131,7 +134,6 @@ def show(username):
 
     except Exception as e:
         return jsonify({"error": f"Failed to retrieve recent_data : {str(e)}"}), 500
-
 
 
 
