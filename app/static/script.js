@@ -15,7 +15,6 @@ login.addEventListener("click", (event) => {
 });
 
 
-
 submit.addEventListener("click", async (event) => {
   event.preventDefault();
 
@@ -81,6 +80,9 @@ show.addEventListener("click", async (event) => {
         data.style.display = 'none';
     }
 });
+
+
+
 
 
 
